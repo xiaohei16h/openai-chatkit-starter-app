@@ -30,8 +30,8 @@ cp .env.example .env.local
 
 Update `.env.local` with the variables that match your setup.
 
-- `OPENAI_API_KEY` — API key with access to ChatKit.
-- `NEXT_PUBLIC_CHATKIT_WORKFLOW_ID` — the workflow you created in the ChatKit dashboard.
+- `OPENAI_API_KEY` — API key created **within the same org & project as your Agent Builder**
+- `NEXT_PUBLIC_CHATKIT_WORKFLOW_ID` — the workflow you created in [Agent Builder](https://platform.openai.com/agent-builder)
 - (optional) `CHATKIT_API_BASE` - customizable base URL for the ChatKit API endpoint
 
 ### 4. Run the app
