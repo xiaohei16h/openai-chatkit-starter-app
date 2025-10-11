@@ -28,9 +28,9 @@ Copy the example file and fill in the required values:
 cp .env.example .env.local
 ```
 
-You can get your workflow id from the [Agent Builder](https://platform.openai.com/agent-builder) interface, after clicking "Publish".
+You can get your workflow id from the [Agent Builder](https://platform.openai.com/agent-builder) interface, after clicking "Publish":
 
-![workflow id](./public/docs/workflow.jpg)
+<img src="./public/docs/workflow.jpg" width=500 />
 
 You can get your OpenAI API key from the [OpenAI API Keys](https://platform.openai.com/api-keys) page.
 
