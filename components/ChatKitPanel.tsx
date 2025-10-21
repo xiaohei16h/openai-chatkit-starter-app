@@ -263,20 +263,32 @@ export function ChatKitPanel({
     [isWorkflowConfigured, setErrorState]
   );
 
+  const currentTheme = settings.theme === "system" ? theme : settings.theme;
+  
   const chatkit = useChatKit({
     api: { getClientSecret },
     theme: {
-      colorScheme: settings.theme === "system" ? theme : settings.theme,
-      ...getThemeConfig(settings.theme === "system" ? theme : settings.theme),
+      colorScheme: currentTheme,
       color: {
         grayscale: {
           hue: 220,
           tint: 6,
-          shade: (settings.theme === "system" ? theme : settings.theme) === "dark" ? -1 : -4,
+          shade: currentTheme === "dark" ? -1 : -4,
         },
         accent: {
           primary: settings.primaryColor,
           level: 1,
+        },
+        background: {
+          primary: currentTheme === "dark" ? "#0f172a" : "#ffffff",
+          secondary: currentTheme === "dark" ? "#1e293b" : "#f8fafc",
+        },
+        text: {
+          primary: currentTheme === "dark" ? "#f1f5f9" : "#0f172a",
+          secondary: currentTheme === "dark" ? "#94a3b8" : "#64748b",
+        },
+        border: {
+          primary: currentTheme === "dark" ? "#334155" : "#e2e8f0",
         },
       },
       radius: settings.borderRadius,
@@ -358,7 +370,11 @@ export function ChatKitPanel({
 
   return (
     <div 
-      className="relative pb-8 flex w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900"
+      className={`relative pb-8 flex w-full rounded-2xl flex-col overflow-hidden shadow-sm transition-colors ${
+        currentTheme === "dark" 
+          ? "bg-slate-900 border border-slate-700" 
+          : "bg-white border border-slate-200"
+      }`}
       style={{ height: `${settings.chatHeight}vh` }}
     >
       <ChatKit
