@@ -269,26 +269,12 @@ export function ChatKitPanel({
     api: { getClientSecret },
     theme: {
       colorScheme: currentTheme,
+      ...getThemeConfig(currentTheme),
       color: {
-        grayscale: {
-          hue: 220,
-          tint: 6,
-          shade: currentTheme === "dark" ? -1 : -4,
-        },
+        ...getThemeConfig(currentTheme).color,
         accent: {
           primary: settings.primaryColor,
           level: 1,
-        },
-        background: {
-          primary: currentTheme === "dark" ? "#0f172a" : "#ffffff",
-          secondary: currentTheme === "dark" ? "#1e293b" : "#f8fafc",
-        },
-        text: {
-          primary: currentTheme === "dark" ? "#f1f5f9" : "#0f172a",
-          secondary: currentTheme === "dark" ? "#94a3b8" : "#64748b",
-        },
-        border: {
-          primary: currentTheme === "dark" ? "#334155" : "#e2e8f0",
         },
       },
       radius: settings.borderRadius,
