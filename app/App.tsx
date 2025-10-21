@@ -28,14 +28,22 @@ export default function App() {
     }
   }, []);
 
+  const currentTheme = settings.theme === "system" ? scheme : settings.theme;
+  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-end bg-slate-100 dark:bg-slate-950">
+    <main className={`flex min-h-screen flex-col items-center justify-end ${
+      currentTheme === "dark" ? "bg-slate-950" : "bg-slate-100"
+    }`}>
       {/* Settings Button */}
       {isClient && (
         <div className="fixed top-4 right-4 z-40">
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl dark:bg-slate-800/90 dark:hover:bg-slate-800"
+            className={`rounded-full p-3 shadow-lg backdrop-blur-sm transition-all hover:shadow-xl ${
+              currentTheme === "dark" 
+                ? "bg-slate-800/90 hover:bg-slate-800" 
+                : "bg-white/90 hover:bg-white"
+            }`}
             title="打开设置"
           >
             <svg className="h-6 w-6 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,9 +57,17 @@ export default function App() {
       {/* Settings Info Display */}
       {isClient && (
         <div className="fixed top-4 left-4 z-40 max-w-sm">
-          <div className="rounded-lg bg-white/90 p-4 shadow-lg backdrop-blur-sm dark:bg-slate-800/90">
-            <h3 className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">当前设置</h3>
-            <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+          <div className={`rounded-lg p-4 shadow-lg backdrop-blur-sm ${
+            currentTheme === "dark" 
+              ? "bg-slate-800/90" 
+              : "bg-white/90"
+          }`}>
+            <h3 className={`mb-2 text-sm font-semibold ${
+              currentTheme === "dark" ? "text-slate-100" : "text-slate-900"
+            }`}>当前设置</h3>
+            <div className={`space-y-1 text-xs ${
+              currentTheme === "dark" ? "text-slate-400" : "text-slate-600"
+            }`}>
               <div className="flex items-center justify-between">
                 <span>主题:</span>
                 <span className="font-medium">{settings.theme === "system" ? "跟随系统" : settings.theme === "light" ? "浅色" : "深色"}</span>
