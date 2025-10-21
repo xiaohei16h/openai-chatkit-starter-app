@@ -12,6 +12,7 @@ import {
 } from "@/lib/config";
 import { ErrorOverlay } from "./ErrorOverlay";
 import type { ColorScheme } from "@/hooks/useColorScheme";
+import { useSettings } from "@/hooks/useSettings";
 
 export type FactAction = {
   type: "save";
@@ -49,6 +50,7 @@ export function ChatKitPanel({
   onResponseEnd,
   onThemeRequest,
 }: ChatKitPanelProps) {
+  const { settings } = useSettings();
   const processedFacts = useRef(new Set<string>());
   const [errors, setErrors] = useState<ErrorState>(() => createInitialErrors());
   const [isInitializingSession, setIsInitializingSession] = useState(true);
@@ -264,22 +266,33 @@ export function ChatKitPanel({
   const chatkit = useChatKit({
     api: { getClientSecret },
     theme: {
-      colorScheme: theme,
-      ...getThemeConfig(theme),
+      colorScheme: settings.theme === "system" ? theme : settings.theme,
+      ...getThemeConfig(settings.theme === "system" ? theme : settings.theme),
+      color: {
+        grayscale: {
+          hue: 220,
+          tint: 6,
+          shade: (settings.theme === "system" ? theme : settings.theme) === "dark" ? -1 : -4,
+        },
+        accent: {
+          primary: settings.primaryColor,
+          level: 1,
+        },
+      },
+      radius: settings.borderRadius,
     },
     startScreen: {
-      greeting: GREETING,
-      prompts: STARTER_PROMPTS,
+      greeting: settings.greeting,
+      prompts: settings.starterPrompts,
     },
     composer: {
-      placeholder: PLACEHOLDER_INPUT,
+      placeholder: settings.placeholder,
       attachments: {
-        // Enable attachments
-        enabled: true,
+        enabled: settings.enableFileUpload,
       },
     },
     threadItemActions: {
-      feedback: false,
+      feedback: settings.enableFeedback,
     },
     onClientTool: async (invocation: {
       name: string;
@@ -344,7 +357,10 @@ export function ChatKitPanel({
   }
 
   return (
-    <div className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
+    <div 
+      className="relative pb-8 flex w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900"
+      style={{ height: `${settings.chatHeight}vh` }}
+    >
       <ChatKit
         key={widgetInstanceKey}
         control={chatkit.control}
