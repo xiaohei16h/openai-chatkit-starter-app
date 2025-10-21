@@ -9,6 +9,7 @@ type ErrorOverlayProps = {
   retryLabel?: string;
   loadingType?: "initializing" | "connecting" | "retrying" | "error";
   customLoadingMessage?: string;
+  theme?: "light" | "dark";
 };
 
 export function ErrorOverlay({
@@ -18,6 +19,7 @@ export function ErrorOverlay({
   retryLabel,
   loadingType,
   customLoadingMessage,
+  theme = "light",
 }: ErrorOverlayProps) {
   if (!error && !fallbackMessage) {
     return null;
@@ -51,19 +53,35 @@ export function ErrorOverlay({
   const isError = Boolean(error);
   const isLoading = !isError && Boolean(fallbackMessage);
 
+  const isDark = theme === "dark";
+  
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 flex h-full w-full flex-col justify-center rounded-[inherit] bg-white/85 p-6 text-center backdrop-blur dark:bg-slate-900/90">
-      <div className="pointer-events-auto mx-auto w-full max-w-md rounded-xl bg-white px-6 py-4 text-lg font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-100 shadow-lg dark:shadow-xl">
+    <div className={`pointer-events-none absolute inset-0 z-10 flex h-full w-full flex-col justify-center rounded-[inherit] p-6 text-center backdrop-blur ${
+      isDark ? "bg-slate-900/90" : "bg-white/85"
+    }`}>
+      <div className={`pointer-events-auto mx-auto w-full max-w-md rounded-xl px-6 py-4 text-lg font-medium shadow-lg ${
+        isDark 
+          ? "bg-slate-800 text-slate-100 shadow-xl" 
+          : "bg-white text-slate-700"
+      }`}>
         {isLoading && (
           <div className="mb-4 flex justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-300 border-t-blue-600"></div>
+            <div className={`h-8 w-8 animate-spin rounded-full border-4 ${
+              isDark 
+                ? "border-slate-600 border-t-blue-400" 
+                : "border-slate-300 border-t-blue-600"
+            }`}></div>
           </div>
         )}
         <div>{content}</div>
         {error && onRetry ? (
           <button
             type="button"
-            className="mt-4 inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-none transition hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+            className={`mt-4 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold shadow-none transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+              isDark
+                ? "bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:ring-slate-500"
+                : "bg-slate-900 text-white hover:bg-slate-800 focus-visible:ring-slate-500"
+            }`}
             onClick={onRetry}
           >
             {retryLabel ?? "Restart chat"}

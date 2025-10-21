@@ -383,6 +383,7 @@ export function ChatKitPanel({
         customLoadingMessage={settings.loadingMessages.initializing}
         onRetry={blockingError && errors.retryable ? handleResetChat : null}
         retryLabel="Restart chat"
+        theme={currentTheme}
       />
     </div>
   );
