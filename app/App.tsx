@@ -78,6 +78,14 @@ export default function App() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
+                <span>欢迎消息:</span>
+                <span className="font-medium text-xs">
+                  {settings.greeting.length > 15 
+                    ? settings.greeting.substring(0, 15) + "..."
+                    : settings.greeting}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
                 <span>启动提示词:</span>
                 <span className="font-medium text-xs">
                   {settings.starterPrompts.length > 0 
