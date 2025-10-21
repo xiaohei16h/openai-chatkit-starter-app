@@ -69,6 +69,24 @@ export default function App() {
                  settings.borderRadius === "large" ? "大" : "圆形"}
               </span>
             </div>
+            <div className="flex items-center justify-between">
+              <span>启动提示词:</span>
+              <span className="font-medium text-xs">
+                {settings.starterPrompts.length > 0 
+                  ? (settings.starterPrompts[0].label.length > 15 
+                      ? settings.starterPrompts[0].label.substring(0, 15) + "..."
+                      : settings.starterPrompts[0].label)
+                  : "无"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>加载消息:</span>
+              <span className="font-medium text-xs">
+                {settings.loadingMessages.initializing.length > 20 
+                  ? settings.loadingMessages.initializing.substring(0, 20) + "..."
+                  : settings.loadingMessages.initializing}
+              </span>
+            </div>
           </div>
         </div>
       </div>

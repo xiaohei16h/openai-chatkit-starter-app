@@ -26,6 +26,14 @@ export type ChatSettings = {
   borderRadius: "none" | "small" | "medium" | "large" | "round";
   chatHeight: number; // 聊天区域高度百分比
   showWelcomeScreen: boolean;
+  
+  // 加载状态配置
+  loadingMessages: {
+    initializing: string;
+    connecting: string;
+    retrying: string;
+    error: string;
+  };
 };
 
 const DEFAULT_SETTINGS: ChatSettings = {
@@ -47,6 +55,12 @@ const DEFAULT_SETTINGS: ChatSettings = {
   borderRadius: "round",
   chatHeight: 90,
   showWelcomeScreen: true,
+  loadingMessages: {
+    initializing: "正在初始化聊天助手...",
+    connecting: "正在连接服务器...",
+    retrying: "正在重试连接...",
+    error: "连接失败，请检查网络设置",
+  },
 };
 
 const STORAGE_KEY = "chatkit-custom-settings";

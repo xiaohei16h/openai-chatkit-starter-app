@@ -375,8 +375,10 @@ export function ChatKitPanel({
         fallbackMessage={
           blockingError || !isInitializingSession
             ? null
-            : "Loading assistant session..."
+            : settings.loadingMessages.initializing
         }
+        loadingType={isInitializingSession ? "initializing" : undefined}
+        customLoadingMessage={settings.loadingMessages.initializing}
         onRetry={blockingError && errors.retryable ? handleResetChat : null}
         retryLabel="Restart chat"
       />

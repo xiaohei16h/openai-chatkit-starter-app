@@ -146,6 +146,177 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                       显示欢迎屏幕
                     </label>
                   </div>
+
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">启动提示词</h4>
+                    
+                    {settings.starterPrompts.map((prompt, index) => (
+                      <div key={index} className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-800">
+                        <div className="mb-2 flex items-center justify-between">
+                          <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                            提示词 {index + 1}
+                          </span>
+                          {settings.starterPrompts.length > 1 && (
+                            <button
+                              onClick={() => {
+                                const newPrompts = settings.starterPrompts.filter((_, i) => i !== index);
+                                updateSettings({ starterPrompts: newPrompts });
+                              }}
+                              className="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                            >
+                              删除
+                            </button>
+                          )}
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                              标签
+                            </label>
+                            <input
+                              type="text"
+                              value={prompt.label}
+                              onChange={(e) => {
+                                const newPrompts = [...settings.starterPrompts];
+                                newPrompts[index] = { ...newPrompts[index], label: e.target.value };
+                                updateSettings({ starterPrompts: newPrompts });
+                              }}
+                              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                              placeholder="提示词标签..."
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                              提示内容
+                            </label>
+                            <input
+                              type="text"
+                              value={prompt.prompt}
+                              onChange={(e) => {
+                                const newPrompts = [...settings.starterPrompts];
+                                newPrompts[index] = { ...newPrompts[index], prompt: e.target.value };
+                                updateSettings({ starterPrompts: newPrompts });
+                              }}
+                              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                              placeholder="提示词内容..."
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                              图标
+                            </label>
+                            <input
+                              type="text"
+                              value={prompt.icon}
+                              onChange={(e) => {
+                                const newPrompts = [...settings.starterPrompts];
+                                newPrompts[index] = { ...newPrompts[index], icon: e.target.value };
+                                updateSettings({ starterPrompts: newPrompts });
+                              }}
+                              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                              placeholder="图标名称..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    <button
+                      onClick={() => {
+                        const newPrompts = [
+                          ...settings.starterPrompts,
+                          {
+                            label: "新提示词",
+                            prompt: "请输入您的问题...",
+                            icon: "circle-question",
+                          },
+                        ];
+                        updateSettings({ starterPrompts: newPrompts });
+                      }}
+                      className="w-full rounded-lg border-2 border-dashed border-slate-300 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-blue-500 hover:text-blue-600 dark:border-slate-600 dark:text-slate-400 dark:hover:border-blue-400 dark:hover:text-blue-400"
+                    >
+                      + 添加新提示词
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">加载状态消息</h4>
+                    
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                        初始化消息
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.loadingMessages.initializing}
+                        onChange={(e) => updateSettings({ 
+                          loadingMessages: { 
+                            ...settings.loadingMessages, 
+                            initializing: e.target.value 
+                          } 
+                        })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                        placeholder="正在初始化聊天助手..."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                        连接消息
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.loadingMessages.connecting}
+                        onChange={(e) => updateSettings({ 
+                          loadingMessages: { 
+                            ...settings.loadingMessages, 
+                            connecting: e.target.value 
+                          } 
+                        })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                        placeholder="正在连接服务器..."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                        重试消息
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.loadingMessages.retrying}
+                        onChange={(e) => updateSettings({ 
+                          loadingMessages: { 
+                            ...settings.loadingMessages, 
+                            retrying: e.target.value 
+                          } 
+                        })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                        placeholder="正在重试连接..."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                        错误消息
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.loadingMessages.error}
+                        onChange={(e) => updateSettings({ 
+                          loadingMessages: { 
+                            ...settings.loadingMessages, 
+                            error: e.target.value 
+                          } 
+                        })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                        placeholder="连接失败，请检查网络设置"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
