@@ -20,9 +20,16 @@ export type FactAction = {
   factText: string;
 };
 
+export type EmailCollectionAction = {
+  type: "collect_email";
+  reason?: string;
+};
+
+export type WidgetAction = FactAction | EmailCollectionAction;
+
 type ChatKitPanelProps = {
   theme: ColorScheme;
-  onWidgetAction: (action: FactAction) => Promise<void>;
+  onWidgetAction: (action: WidgetAction) => Promise<void>;
   onResponseEnd: () => void;
   onThemeRequest: (scheme: ColorScheme) => void;
 };
@@ -318,6 +325,18 @@ export function ChatKitPanel({
           type: "save",
           factId: id,
           factText: text.replace(/\s+/g, " ").trim(),
+        });
+        return { success: true };
+      }
+
+      if (invocation.name === "collect_email") {
+        const reason = String(invocation.params.reason ?? "");
+        if (isDev) {
+          console.debug("[ChatKitPanel] collect_email triggered", { reason });
+        }
+        void onWidgetAction({
+          type: "collect_email",
+          reason: reason || undefined,
         });
         return { success: true };
       }

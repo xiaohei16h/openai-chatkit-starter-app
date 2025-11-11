@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useState, useEffect } from "react";
-import { ChatKitPanel, type FactAction } from "@/components/ChatKitPanel";
+import { ChatKitPanel, type WidgetAction } from "@/components/ChatKitPanel";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { EmailCollectionModal } from "@/components/EmailCollectionModal";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useSettings } from "@/hooks/useSettings";
 
@@ -11,14 +12,61 @@ export default function App() {
   const { settings } = useSettings();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const handleWidgetAction = useCallback(async (action: FactAction) => {
+  const handleWidgetAction = useCallback(async (action: WidgetAction) => {
     if (process.env.NODE_ENV !== "production") {
       console.info("[ChatKitPanel] widget action", action);
+    }
+
+    if (action.type === "collect_email") {
+      setIsEmailModalOpen(true);
+    }
+  }, []);
+
+  const handleEmailSubmit = useCallback(async (email: string) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("[App] Email collected:", email);
+    }
+
+    try {
+      // 发送邮箱到后端 API
+      const response = await fetch("/api/collect-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          timestamp: new Date().toISOString(),
+          reason: "customer service request",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to submit email");
+      }
+
+      const result = await response.json();
+      console.log("Email submitted successfully:", result);
+
+      // 同时保存到 localStorage 作为备份
+      const emails = JSON.parse(
+        localStorage.getItem("collected_emails") || "[]"
+      );
+      emails.push({
+        email,
+        timestamp: new Date().toISOString(),
+      });
+      localStorage.setItem("collected_emails", JSON.stringify(emails));
+    } catch (error) {
+      console.error("Failed to submit email:", error);
+      throw error;
     }
   }, []);
 
@@ -129,6 +177,14 @@ export default function App() {
       <SettingsPanel
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+      />
+
+      {/* Email Collection Modal */}
+      <EmailCollectionModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        onSubmit={handleEmailSubmit}
+        theme={currentTheme}
       />
     </main>
   );
